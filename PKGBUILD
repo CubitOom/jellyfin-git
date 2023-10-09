@@ -4,7 +4,7 @@
 
 pkgbase=jellyfin-git
 pkgname=(jellyfin-git jellyfin-web-git jellyfin-server-git)
-pkgver=10.8.0.alpha5.r1656.g2ce08eb184
+pkgver=latest
 pkgrel=1
 pkgdesc='The Free Software Media System'
 arch=('i686' 'x86_64' 'armv6h')
@@ -27,9 +27,9 @@ sha512sums=('SKIP'
             '45a62b62d97b9a83289d4dfde684163b1bcf340c1921fb958e5a701812c61b392901841940c67e5fa5148783277d5b4dc65ba01d3a22e8f855ea62154ad9be33')
 
 pkgver() {
-  cd jellyfin
-  # cutting off 'v' prefix that presents in the git tag
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  curl --silent -qI https://github.com/jellyfin/jellyfin/releases/latest | \
+  awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}' | \
+  sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
